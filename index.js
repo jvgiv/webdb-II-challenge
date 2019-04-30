@@ -26,6 +26,33 @@ server.post('/api/zoos', (req, res) => {
 })
 
 
+// server.get('/api/zoos', (req, res) => {
+
+// })
+
+
+
+
+
+
+server.delete('/api/zoos/:id', (req, res) => {
+  const { id } = req.params;
+
+  db('lambda')
+    .where({ id })
+    .del()
+    .then(count => {
+      res.status(200).json(count)
+    })
+    .catch(err => {
+      res.status(500).json(err)
+    })
+})
+
+
+
+
+
 server.put('/api/zoos/:id', (req, res) => {
   const changes = req.body;
   const { id } = req.params;
