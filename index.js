@@ -13,8 +13,8 @@ server.use(helmet());
 server.post('/api/zoos', (req, res) => {
   const name = req.body;
 
-  db.insert(name)
-    .into('lambda')
+  db('zoos')
+    .insert(name)
     .then(ids => {
       res.status(201).json(ids)
     })
@@ -26,11 +26,21 @@ server.post('/api/zoos', (req, res) => {
 })
 
 
-// server.get('/api/zoos', (req, res) => {
-
-// })
+server.get('/api/zoos', async (req, res) => {
 
 
+  const animals = await db('zoos')
+    res.json(animals)
+})
+
+server.get('/api/zoos/:id', async (req, res) => {
+  const { id } =  req.params
+
+  const animals = await db('zoos')
+    .where({ id }).first() // .FIRST ALLOWS YOU TO GET THE INDIVIDUAL ITEM AS AN OBJECT
+
+    res.json(animals)
+})
 
 
 
@@ -38,7 +48,7 @@ server.post('/api/zoos', (req, res) => {
 server.delete('/api/zoos/:id', (req, res) => {
   const { id } = req.params;
 
-  db('lambda')
+  db('zoos')
     .where({ id })
     .del()
     .then(count => {
@@ -57,7 +67,7 @@ server.put('/api/zoos/:id', (req, res) => {
   const changes = req.body;
   const { id } = req.params;
 
-  db('lambda')
+  db('zoos')
     .where('id', '=', id)
     .update(changes)
     .then(count => {
